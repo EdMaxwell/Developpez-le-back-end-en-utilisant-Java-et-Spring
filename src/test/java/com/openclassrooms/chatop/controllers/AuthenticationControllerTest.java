@@ -45,7 +45,6 @@ class AuthenticationControllerTest {
         invalidLoginUserDto = new LoginUserDto("invalid@example.com", "wrongPassword");
 
         mockUser = new User();
-        mockUser.setId(1);
         mockUser.setName("John Doe");
         mockUser.setEmail("john.doe@example.com");
         mockUser.setPassword("encodedPassword");
