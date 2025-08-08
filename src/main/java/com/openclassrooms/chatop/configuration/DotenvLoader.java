@@ -1,4 +1,4 @@
-package com.openclassrooms.chatop.config;
+package com.openclassrooms.chatop.configuration;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
