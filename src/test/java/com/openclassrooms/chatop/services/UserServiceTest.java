@@ -2,6 +2,7 @@ package com.openclassrooms.chatop.services;
 
 import com.openclassrooms.chatop.entities.User;
 import com.openclassrooms.chatop.repositories.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,27 +24,55 @@ class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    @Test
-    void findByEmail_ReturnsUser_WhenEmailExists() {
-        String email = "test@example.com";
-        User user = new User();
+    private User user;
+
+    @BeforeEach
+    void setUp() {
+        user = new User();
+        user.setId(1L);
         user.setName("Test User");
         user.setEmail("test@example.com");
         user.setPassword("encodedPassword");
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+    }
 
-        User result = userService.findByEmail(email);
+    @Test
+    void findByEmail_ReturnsUser_WhenEmailExists() {
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        User result = userService.findByEmail(user.getEmail());
 
         assertNotNull(result);
-        assertEquals(email, result.getEmail());
-        assertEquals("Test User", result.getName());
+        assertEquals(user.getEmail(), result.getEmail());
+        assertEquals(user.getName(), result.getName());
     }
 
     @Test
     void findByEmail_ThrowsException_WhenEmailDoesNotExist() {
-        String email = "nonexistent@example.com";
-        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+        when(userRepository.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> userService.findByEmail(email));
+        assertThrows(NoSuchElementException.class, () -> userService.findByEmail("nonexistent@example.com"));
+    }
+
+    @Test
+    void findById_ReturnsUser_WhenIdExists() {
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        User result = userService.findById(user.getId());
+
+        assertNotNull(result);
+        assertEquals(user.getId(), result.getId());
+        assertEquals(user.getName(), result.getName());
+    }
+
+    @Test
+    void findById_ThrowsException_WhenIdDoesNotExist() {
+        when(userRepository.findById(2L)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> userService.findById(2L));
+    }
+
+    @Test
+    void findById_ThrowsException_WhenIdIsNull() {
+        assertThrows(IllegalArgumentException.class, () -> userService.findById(null));
     }
 }

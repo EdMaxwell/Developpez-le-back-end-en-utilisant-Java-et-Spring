@@ -33,4 +33,20 @@ public class UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("Utilisateur non trouvé avec l'email : " + email));
     }
+
+    /**
+     * Recherche un utilisateur par son identifiant.
+     *
+     * @param id L'identifiant de l'utilisateur à rechercher. Ne peut pas être null.
+     * @return L'utilisateur correspondant à l'identifiant fourni.
+     * @throws IllegalArgumentException Si l'identifiant est null.
+     * @throws NoSuchElementException Si aucun utilisateur n'est trouvé avec l'identifiant donné.
+     */
+    public User findById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("L'id ne peut pas être null");
+        }
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Utilisateur non trouvé avec l'id : " + id));
+    }
 }
