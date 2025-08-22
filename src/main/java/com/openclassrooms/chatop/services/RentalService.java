@@ -33,8 +33,9 @@ public class RentalService {
      * @throws IllegalArgumentException si le fichier est trop volumineux ou n'est pas une image
      */
     @org.springframework.transaction.annotation.Transactional
-    public Rental createRental(@jakarta.validation.Valid CreateRentalDto dto) throws IOException {
+    public Rental createRental(@jakarta.validation.Valid CreateRentalDto dto, Long ownerId) throws IOException {
         Rental r = new Rental();
+        r.setOwnerId(ownerId);
         r.setName(dto.getName());
         r.setSurface(dto.getSurface());
         r.setPrice(dto.getPrice());
@@ -51,5 +52,14 @@ public class RentalService {
             r.setPictureSize(pic.getSize());
         }
         return repo.save(r);
+    }
+
+    /**
+     * Récupère une location par son identifiant.
+     * @param id identifiant de la location
+     * @return la location ou null si non trouvée
+     */
+    public Rental findById(Long id) {
+        return repo.findById(id).orElse(null);
     }
 }
