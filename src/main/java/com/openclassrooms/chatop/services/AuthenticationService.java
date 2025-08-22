@@ -61,12 +61,12 @@ public class AuthenticationService {
     public User authenticate(LoginUserDto input) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        input.getLogin(),
+                        input.getEmail(),
                         input.getPassword()
                 )
         );
 
-        return userRepository.findByEmail(input.getLogin())
+        return userRepository.findByEmail(input.getEmail())
                 .orElseThrow();
     }
 }

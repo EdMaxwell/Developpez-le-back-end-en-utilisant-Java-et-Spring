@@ -48,9 +48,13 @@ public class AuthenticationController {
      * @return l'utilisateur créé
      */
     @PostMapping("/register")
-    public ResponseEntity<User> register(@Valid @RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterUserDto registerUserDto) {
         User registeredUser = authenticationService.signup(registerUserDto);
-        return ResponseEntity.ok(registeredUser);
+        String jwtToken = jwtService.generateToken(registeredUser);
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setToken(jwtToken);
+        loginResponse.setExpiresIn(jwtService.getExpirationTime());
+        return ResponseEntity.ok(loginResponse);
     }
 
     /**
@@ -59,7 +63,7 @@ public class AuthenticationController {
      * @param loginUserDto les informations de connexion de l'utilisateur
      * @return la réponse contenant le token JWT et la durée d'expiration
      */
-    @PostMapping("/email")
+    @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticate(@Valid @RequestBody LoginUserDto loginUserDto) {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
         String jwtToken = jwtService.generateToken(authenticatedUser);

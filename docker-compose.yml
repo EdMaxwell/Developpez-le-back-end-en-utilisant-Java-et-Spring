@@ -22,7 +22,7 @@ services:
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: rootpassword # facultatif mais utile pour accès root
+      MYSQL_ROOT_PASSWORD: root # facultatif mais utile pour accès root
     depends_on:
       - mysql
 

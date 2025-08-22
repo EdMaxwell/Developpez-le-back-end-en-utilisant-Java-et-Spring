@@ -52,13 +52,17 @@ class AuthenticationControllerTest {
 
     // Vérifie que l'inscription retourne l'utilisateur créé avec des données valides
     @Test
-    void registerShouldReturnCreatedUserWhenValidInput() {
+    void registerShouldReturnJwtTokenWhenValidInput() {
+        String mockToken = "mockJwtToken";
         when(authenticationService.signup(validRegisterUserDto)).thenReturn(mockUser);
+        when(jwtService.generateToken(mockUser)).thenReturn(mockToken);
+        when(jwtService.getExpirationTime()).thenReturn(3600L);
 
-        ResponseEntity<User> response = authenticationController.register(validRegisterUserDto);
+        ResponseEntity<LoginResponse> response = authenticationController.register(validRegisterUserDto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(mockUser, response.getBody());
+        assertEquals(mockToken, response.getBody().getToken());
+        assertEquals(3600L, response.getBody().getExpiresIn());
     }
 
     // Vérifie que l'inscription échoue avec des données invalides
