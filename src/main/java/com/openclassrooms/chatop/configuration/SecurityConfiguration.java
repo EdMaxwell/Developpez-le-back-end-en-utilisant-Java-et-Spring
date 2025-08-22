@@ -76,7 +76,7 @@ public class SecurityConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // Définit les origines autorisées pour les requêtes CORS
-        configuration.setAllowedOrigins(List.of("http://localhost:8005", "http://localhost:4200"));
+        configuration.setAllowedOrigins(List.of("http://localhost:8005"));
 
         // Définit les méthodes HTTP autorisées
         configuration.setAllowedMethods(List.of("GET", "POST"));
