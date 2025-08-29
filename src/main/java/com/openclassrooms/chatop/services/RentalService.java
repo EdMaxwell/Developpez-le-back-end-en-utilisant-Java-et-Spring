@@ -1,12 +1,17 @@
 package com.openclassrooms.chatop.services;
 
 import com.openclassrooms.chatop.dtos.CreateRentalDto;
+import com.openclassrooms.chatop.dtos.RentalListItemDto;
 import com.openclassrooms.chatop.entities.Rental;
 import com.openclassrooms.chatop.repositories.RentalRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service pour la gestion des locations.
@@ -48,7 +53,7 @@ public class RentalService {
             if (!ct.startsWith("image/")) throw new IllegalArgumentException("File must be an image");
             r.setPicture(pic.getBytes());
             r.setPictureContentType(ct);
-            r.setPictureFilename(java.util.Optional.ofNullable(pic.getOriginalFilename()).orElse("image"));
+            r.setPictureFilename(java.util.UUID.randomUUID() + getExtension(pic.getOriginalFilename()));
             r.setPictureSize(pic.getSize());
         }
         return repo.save(r);
@@ -62,4 +67,32 @@ public class RentalService {
     public Rental findById(Long id) {
         return repo.findById(id).orElse(null);
     }
+
+    /**
+     * Récupère tous les rentals et les mappe en DTO.
+     * @return liste des rentals au format DTO
+     */
+    public List<RentalListItemDto> findAllRentals() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd").withZone(ZoneId.systemDefault());
+        return repo.findAll().stream()
+                .map(rental -> new RentalListItemDto(
+                        rental.getId(),
+                        rental.getName(),
+                        rental.getSurface(),
+                        rental.getPrice(),
+                        "/api/rentals/" + rental.getId() + "/picture", // URL de l'image
+                        rental.getDescription(),
+                        rental.getOwnerId(),
+                        formatter.format(rental.getCreatedAt()),
+                        formatter.format(rental.getUpdatedAt())
+                ))
+                .collect(Collectors.toList());
+    }
+
+    private String getExtension(String filename) {
+        int idx = filename.lastIndexOf('.');
+        return (idx > 0) ? filename.substring(idx) : "";
+    }
+
+
 }

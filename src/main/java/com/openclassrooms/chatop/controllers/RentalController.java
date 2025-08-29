@@ -1,6 +1,8 @@
 package com.openclassrooms.chatop.controllers;
 
 import com.openclassrooms.chatop.dtos.CreateRentalDto;
+import com.openclassrooms.chatop.dtos.RentalListItemDto;
+import com.openclassrooms.chatop.dtos.RentalListResponse;
 import com.openclassrooms.chatop.dtos.RentalResponse;
 import com.openclassrooms.chatop.entities.Rental;
 import com.openclassrooms.chatop.entities.User;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * Contrôleur REST pour la gestion des locations.
@@ -84,15 +87,28 @@ public class RentalController {
      * Endpoint GET pour récupérer l'image d'une location.
      */
     @GetMapping("/{id}/picture")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<byte[]> getRentalPicture(@PathVariable Long id) {
         Rental rental = rentalService.findById(id);
-        if (rental == null || rental.getPicture() == null) {
+        if (rental == null) {
             return ResponseEntity.notFound().build();
+        }
+        if (rental.getPicture() == null) {
+            return ResponseEntity.status(404).body(null);
         }
         return ResponseEntity.ok()
                 .header("Content-Type", rental.getPictureContentType())
+                .header("Content-Disposition", "inline; filename=\"" + rental.getPictureFilename() + "\"")
                 .body(rental.getPicture());
+    }
+
+    /**
+     * Endpoint GET pour récupérer la liste des rentals.
+     */
+    @GetMapping(produces = "application/json")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<RentalListResponse> getAllRentals() {
+        List<RentalListItemDto> rentals = rentalService.findAllRentals();
+        return ResponseEntity.ok(new RentalListResponse(rentals));
     }
 
     /**

@@ -49,6 +49,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                        .requestMatchers("/api/rentals/*/picture").permitAll() // <-- accès public à l'image
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated()
                 )
