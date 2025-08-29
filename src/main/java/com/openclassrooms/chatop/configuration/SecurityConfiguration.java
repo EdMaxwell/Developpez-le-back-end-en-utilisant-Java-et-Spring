@@ -48,8 +48,14 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                        .requestMatchers("/api/rentals/*/picture").permitAll() // <-- accès public à l'image
+                        .requestMatchers(
+                                "/api/auth/register",
+                                "/api/auth/login",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
+                        .requestMatchers("/api/rentals/*/picture").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated()
                 )
