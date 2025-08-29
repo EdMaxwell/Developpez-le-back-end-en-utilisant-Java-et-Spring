@@ -54,5 +54,18 @@ public class Rental {
     @PrePersist
     void onCreate() {
         this.createdAt = Instant.now();
+        this.updatedAt = this.createdAt;
+    }
+
+    /** Identifiant du propriétaire. */
+    private Long ownerId;
+
+    /** Date de dernière mise à jour de la location. */
+    private Instant updatedAt;
+
+    /** Met à jour la date de modification avant update. */
+    @PreUpdate
+    void onUpdate() {
+        this.updatedAt = Instant.now();
     }
 }
