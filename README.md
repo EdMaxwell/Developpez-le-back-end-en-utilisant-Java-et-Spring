@@ -65,7 +65,7 @@ graph TB
 
 ### Technologies utilisées
 
-- **Java 17** : Langage de programmation principal
+- **Java 21** : Langage de programmation principal
 - **Spring Boot 3.5.3** : Framework principal
 - **Spring Security** : Authentification et autorisation
 - **Spring Data JPA** : Persistance des données
@@ -122,7 +122,7 @@ src/main/java/com/openclassrooms/chatop/
 
 ### Prérequis
 
-- Java 17 ou supérieur
+- Java 21
 - Maven 3.6+
 - MySQL 8.0+
 - Git
@@ -208,12 +208,6 @@ L'application sera disponible sur `http://localhost:3001`
 ./mvnw test jacoco:report
 ```
 
-### Types de tests
-
-- **Tests unitaires** : Tests des services et logiques métier
-- **Tests d'intégration** : Tests des contrôleurs et de la persistance
-- **Tests de sécurité** : Tests des endpoints protégés
-
 ## Documentation API
 
 ### Swagger UI
@@ -275,43 +269,6 @@ Authorization: Bearer your-jwt-token-here
 4. Créer les contrôleurs REST
 5. Ajouter les tests unitaires et d'intégration
 6. Mettre à jour la documentation
-
-## Déploiement
-
-### Build de production
-
-```bash
-# Compilation optimisée
-./mvnw clean package -Dmaven.test.skip=true
-
-# Le JAR sera généré dans target/
-```
-
-### Configuration production
-
-- Utiliser des variables d'environnement pour les secrets
-- Configurer SSL/HTTPS
-- Optimiser les paramètres JVM
-- Configurer les logs appropriés
-
-## Maintenance
-
-### Logs
-
-Les logs sont configurés via `application.properties` :
-- Niveau DEBUG en développement
-- Niveau INFO/WARN en production
-- Rotation automatique des fichiers de log
-
-### Monitoring
-
-- Health check endpoint : `GET /actuator/health`
-- Métriques : `GET /actuator/metrics`
-
-### Sauvegarde
-
-- Sauvegardes régulières de la base de données MySQL
-- Sauvegarde des images uploadées
 
 ## Licence
 
