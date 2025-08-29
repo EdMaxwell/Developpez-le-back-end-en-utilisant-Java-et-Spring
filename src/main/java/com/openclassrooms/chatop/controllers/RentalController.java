@@ -1,9 +1,6 @@
 package com.openclassrooms.chatop.controllers;
 
-import com.openclassrooms.chatop.dtos.CreateRentalDto;
-import com.openclassrooms.chatop.dtos.RentalListItemDto;
-import com.openclassrooms.chatop.dtos.RentalListResponse;
-import com.openclassrooms.chatop.dtos.RentalResponse;
+import com.openclassrooms.chatop.dtos.*;
 import com.openclassrooms.chatop.entities.Rental;
 import com.openclassrooms.chatop.entities.User;
 import com.openclassrooms.chatop.services.RentalService;
@@ -109,6 +106,28 @@ public class RentalController {
     public ResponseEntity<RentalListResponse> getAllRentals() {
         List<RentalListItemDto> rentals = rentalService.findAllRentals();
         return ResponseEntity.ok(new RentalListResponse(rentals));
+    }
+
+    /**
+     * Endpoint PUT pour mettre à jour une location existante.
+     */
+    @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> updateRental(
+            @PathVariable Long id,
+            @ModelAttribute @Valid UpdateRentalDto dto
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userService.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
+        Rental updated = rentalService.updateRental(id, dto, user.getId());
+        if (updated == null) {
+            return ResponseEntity.status(401).build();
+        }
+        return ResponseEntity.ok(java.util.Map.of("message", "Rental updated !"));
     }
 
     /**

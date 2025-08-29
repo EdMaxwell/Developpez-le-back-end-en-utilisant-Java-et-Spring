@@ -2,6 +2,7 @@ package com.openclassrooms.chatop.services;
 
 import com.openclassrooms.chatop.dtos.CreateRentalDto;
 import com.openclassrooms.chatop.dtos.RentalListItemDto;
+import com.openclassrooms.chatop.dtos.UpdateRentalDto;
 import com.openclassrooms.chatop.entities.Rental;
 import com.openclassrooms.chatop.repositories.RentalRepository;
 import org.springframework.stereotype.Service;
@@ -87,6 +88,25 @@ public class RentalService {
                         formatter.format(rental.getUpdatedAt())
                 ))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Met à jour une location existante.
+     * @param id identifiant de la location à mettre à jour
+     * @param dto données de mise à jour
+     * @param userId identifiant de l'utilisateur effectuant la mise à jour
+     * @return la location mise à jour ou null si non trouvée ou pas le propriétaire
+     */
+    public Rental updateRental(Long id, UpdateRentalDto dto, Long userId) {
+        Rental rental = findById(id);
+        if (rental == null || !rental.getOwnerId().equals(userId)) {
+            return null;
+        }
+        rental.setName(dto.getName());
+        rental.setSurface(dto.getSurface());
+        rental.setPrice(dto.getPrice());
+        rental.setDescription(dto.getDescription());
+        return repo.save(rental);
     }
 
     private String getExtension(String filename) {

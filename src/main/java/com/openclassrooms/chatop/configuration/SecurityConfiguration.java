@@ -80,7 +80,7 @@ public class SecurityConfiguration {
         configuration.setAllowedOrigins(List.of("http://localhost:8005"));
 
         // Définit les méthodes HTTP autorisées
-        configuration.setAllowedMethods(List.of("GET", "POST"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
         // Définit les en-têtes autorisés
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
