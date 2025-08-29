@@ -14,6 +14,55 @@ Chatop est une application web de gestion de locations immobilières développé
 
 ## Architecture technique
 
+### Vue d'ensemble de l'architecture
+
+```mermaid
+graph TB
+    Client[Client Web/Mobile] --> API[Chatop REST API]
+    API --> Auth[JWT Authentication]
+    API --> Controllers[REST Controllers]
+    Controllers --> Services[Business Services]
+    Services --> Repositories[JPA Repositories]
+    Repositories --> DB[(MySQL Database)]
+    
+    subgraph "Security Layer"
+        Auth --> Filter[JWT Filter]
+        Filter --> Security[Spring Security]
+    end
+    
+    subgraph "Application Layers"
+        Controllers --> |DTOs| Services
+        Services --> |Entities| Repositories
+    end
+    
+    subgraph "Documentation"
+        API --> Swagger[Swagger UI]
+        API --> OpenAPI[OpenAPI Spec]
+    end
+```
+
+### Architecture en couches
+
+| Couche | Responsabilité | Technologies |
+|--------|----------------|-------------|
+| **Présentation** | API REST, Documentation | Spring MVC, Swagger/OpenAPI |
+| **Sécurité** | Authentification, Autorisation | Spring Security, JWT |
+| **Service** | Logique métier, Validation | Spring Services, Jakarta Validation |
+| **Persistance** | Accès aux données | Spring Data JPA, Hibernate |
+| **Base de données** | Stockage des données | MySQL 8.0 |
+
+### Flux d'authentification
+
+```
+1. Client → POST /api/auth/login (email/password)
+2. API → Validation des identifiants
+3. API → Génération du token JWT
+4. API → Retour du token au client
+5. Client → Stockage du token
+6. Client → Requêtes avec header Authorization: Bearer {token}
+7. API → Validation du token à chaque requête
+```
+
 ### Technologies utilisées
 
 - **Java 17** : Langage de programmation principal
