@@ -196,18 +196,6 @@ java -jar target/chatop-0.0.1-SNAPSHOT.jar
 
 L'application sera disponible sur `http://localhost:3001`
 
-## Tests
-
-### Exécution des tests
-
-```bash
-# Tous les tests
-./mvnw test
-
-# Tests avec rapport de couverture (si configuré)
-./mvnw test jacoco:report
-```
-
 ## Documentation API
 
 ### Swagger UI
